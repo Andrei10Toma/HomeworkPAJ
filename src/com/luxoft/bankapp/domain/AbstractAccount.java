@@ -43,4 +43,24 @@ public abstract class AbstractAccount implements Account {
 		return balance;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		AbstractAccount that = (AbstractAccount) o;
+
+		return id == that.id;
+	}
+
+	@Override
+	public int hashCode() {
+		return id;
+	}
+
+	@Override
+	public String toString() {
+		return "id=" + id +
+				", balance=" + balance;
+	}
 }

@@ -1,18 +1,24 @@
 package com.luxoft.bankapp.domain;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Client {
 	
 	private String name;
 	private Gender gender;
-	private List<Account> accounts = new ArrayList<Account>();
+	private Set<Account> accounts = new HashSet<>();
+
+	private String city;
 
 	public Client(String name, Gender gender) {
 		this.name = name;
 		this.gender = gender;
+	}
+
+	public Client(String name, Gender gender, String city) {
+		this.name = name;
+		this.gender = gender;
+		this.city = city;
 	}
 	
 	public void addAccount(final Account account) {
@@ -26,9 +32,13 @@ public class Client {
 	public Gender getGender() {
 		return gender;
 	}
+
+	public String getCity() {
+		return city;
+	}
 	
-	public List<Account> getAccounts() {
-		return Collections.unmodifiableList(accounts);
+	public Set<Account> getAccounts() {
+		return Collections.unmodifiableSet(accounts);
 	}
 	
 	public String getClientGreeting() {
@@ -44,4 +54,21 @@ public class Client {
 		return getClientGreeting();
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Client client = (Client) o;
+
+		if (!Objects.equals(name, client.name)) return false;
+		return gender == client.gender;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = name != null ? name.hashCode() : 0;
+		result = 31 * result + (gender != null ? gender.hashCode() : 0);
+		return result;
+	}
 }

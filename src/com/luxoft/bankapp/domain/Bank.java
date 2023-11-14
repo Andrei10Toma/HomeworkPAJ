@@ -1,17 +1,14 @@
 package com.luxoft.bankapp.domain;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.luxoft.bankapp.exceptions.ClientExistsException;
 import com.luxoft.bankapp.utils.ClientRegistrationListener;
 
 public class Bank {
 	
-	private final List<Client> clients = new ArrayList<Client>();
+	private final Set<Client> clients = new HashSet<>();
 	private final List<ClientRegistrationListener> listeners = new ArrayList<ClientRegistrationListener>();
 	
 	private int printedClients = 0;
@@ -39,7 +36,7 @@ public class Bank {
 	public void addClient(final Client client) throws ClientExistsException {
     	if (clients.contains(client)) {
     		throw new ClientExistsException("Client already exists into the bank");
-    	} 
+    	}
     		
     	clients.add(client);
         notify(client);
@@ -51,8 +48,8 @@ public class Bank {
         }
     }
 	
-	public List<Client> getClients() {
-		return Collections.unmodifiableList(clients);
+	public Set<Client> getClients() {
+		return Collections.unmodifiableSet(clients);
 	}
 	
 	class PrintClientListener implements ClientRegistrationListener {

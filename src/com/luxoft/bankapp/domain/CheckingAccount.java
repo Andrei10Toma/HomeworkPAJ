@@ -31,4 +31,12 @@ public class CheckingAccount extends AbstractAccount {
 	public double maximumAmountToWithdraw(){
         return getBalance() + overdraft;
     }
+
+	@Override
+	public String toString() {
+		return "CA{" +
+				"overdraft=" + overdraft +
+				',' + super.toString() +
+				'}';
+	}
 }
