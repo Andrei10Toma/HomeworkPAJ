@@ -1,11 +1,7 @@
 package com.luxoft.bankapp.main;
 
-import com.luxoft.bankapp.domain.Account;
-import com.luxoft.bankapp.domain.Bank;
-import com.luxoft.bankapp.domain.CheckingAccount;
-import com.luxoft.bankapp.domain.Client;
-import com.luxoft.bankapp.domain.Gender;
-import com.luxoft.bankapp.domain.SavingAccount;
+import com.luxoft.bankapp.domain.*;
+import com.luxoft.bankapp.email.EmailService;
 import com.luxoft.bankapp.exceptions.ClientExistsException;
 import com.luxoft.bankapp.exceptions.NotEnoughFundsException;
 import com.luxoft.bankapp.exceptions.OverdraftLimitExceededException;
@@ -20,10 +16,18 @@ public class BankApplication {
 	
 	public static void main(String[] args) {
 		bank = new Bank();
+		EmailService emailService = new EmailService();
+		bank.setEmailService(emailService);
 		modifyBank();
+		emailService.close();
+		try {
+			emailService.getThread().join();
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 		if (args.length == 0) {
-			printBalance();
-			BankService.printMaximumAmountToWithdraw(bank);
+//			printBalance();
+//			BankService.printMaximumAmountToWithdraw(bank);
 		} else {
 			if ("-statistics".equals(args[0])) {
 				Scanner scanner = new Scanner(System.in);
