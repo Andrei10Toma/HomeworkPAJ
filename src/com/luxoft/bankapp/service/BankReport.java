@@ -7,7 +7,7 @@ import com.luxoft.bankapp.domain.Client;
 
 import java.util.*;
 
-public class BankReport {
+public class BankReport implements Reporter {
     private final Bank bank;
 
     public BankReport(Bank bank) {
@@ -140,12 +140,7 @@ public class BankReport {
         if (clients == null)
             return Collections.emptyMap();
 
-        Map<String, List<Client>> cityClients = new TreeMap<>(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o1.compareTo(o2);
-            }
-        });
+        Map<String, List<Client>> cityClients = new TreeMap<>();
 
         for (Client client : clients) {
             String clientCity = client.getCity();

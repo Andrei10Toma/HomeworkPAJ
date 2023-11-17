@@ -6,7 +6,9 @@ import com.luxoft.bankapp.exceptions.ClientExistsException;
 import com.luxoft.bankapp.exceptions.NotEnoughFundsException;
 import com.luxoft.bankapp.exceptions.OverdraftLimitExceededException;
 import com.luxoft.bankapp.service.BankReport;
+import com.luxoft.bankapp.service.BankReportStreams;
 import com.luxoft.bankapp.service.BankService;
+import com.luxoft.bankapp.service.Reporter;
 
 import java.util.Scanner;
 
@@ -26,14 +28,20 @@ public class BankApplication {
 			throw new RuntimeException(e);
 		}
 		if (args.length == 0) {
-//			printBalance();
-//			BankService.printMaximumAmountToWithdraw(bank);
+			printBalance();
+			BankService.printMaximumAmountToWithdraw(bank);
 		} else {
 			if ("-statistics".equals(args[0])) {
 				Scanner scanner = new Scanner(System.in);
 				while (scanner.hasNext()) {
 					String command = scanner.nextLine();
 					if ("exit".equals(command)) {
+						emailService.close();
+						try {
+							emailService.getThread().join();
+						} catch (InterruptedException e) {
+							throw new RuntimeException(e);
+						}
 						return;
 					} else if ("display statistic".equals(command)) {
 						printStatistics();
@@ -114,10 +122,21 @@ public class BankApplication {
 
 	private static void printStatistics() {
 		System.out.format("%nPrint bank statistics%n");
-		BankReport bankReport = new BankReport(bank);
+		Reporter bankReport = new BankReport(bank);
 		System.out.format("Number of clients in the bank is: %d%n", bankReport.getNumberOfClients());
 		System.out.format("Number of accounts in the bank is: %d%n", bankReport.getNumberOfAccounts());
 		System.out.format("Sorted list of clients is: %s%n", bankReport.getClientsSorted().toString());
+		System.out.format("The total sum in accounts is: %.2f%n", bankReport.getTotalSumInAccounts());
+		System.out.format("Sorted list of accounts is: %s%n", bankReport.getAccountsSortedBySum());
+		System.out.format("Bank credit sum is: %.2f%n", bankReport.getBankCreditSum());
+		System.out.format("Customer accounts are: %s%n", bankReport.getCustomerAccounts());
+		System.out.format("Clients by cities: %s%n", bankReport.getClientsByCity());
+
+		System.out.format("%nPrint bank statistics with streams%n");
+		bankReport = new BankReportStreams(bank);
+		System.out.format("Number of clients in the bank is: %d%n", bankReport.getNumberOfClients());
+		System.out.format("Number of accounts in the bank is: %d%n", bankReport.getNumberOfAccounts());
+		System.out.format("Sorted list of clients is: %s%n", bankReport.getClientsSorted());
 		System.out.format("The total sum in accounts is: %.2f%n", bankReport.getTotalSumInAccounts());
 		System.out.format("Sorted list of accounts is: %s%n", bankReport.getAccountsSortedBySum());
 		System.out.format("Bank credit sum is: %.2f%n", bankReport.getBankCreditSum());
