@@ -79,6 +79,8 @@ public class Bank {
 			if (emailService == null)
 				return;
 
+			emailedClients++;
+
 			emailService.sendNotificationEmail(new Email(
 					noReply,
 					Collections.singletonList(client),
